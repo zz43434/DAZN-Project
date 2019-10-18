@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoStreamAPI", "VideoStreamAPI\VideoStreamAPI.csproj", "{A13D6275-9D52-4169-87A6-B5A536D48A8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoStreamTests", "VideoStreamTests\VideoStreamTests.csproj", "{167A9CF5-517C-4D9F-A574-24C67B08FB02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A13D6275-9D52-4169-87A6-B5A536D48A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A13D6275-9D52-4169-87A6-B5A536D48A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A13D6275-9D52-4169-87A6-B5A536D48A8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{167A9CF5-517C-4D9F-A574-24C67B08FB02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{167A9CF5-517C-4D9F-A574-24C67B08FB02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{167A9CF5-517C-4D9F-A574-24C67B08FB02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{167A9CF5-517C-4D9F-A574-24C67B08FB02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

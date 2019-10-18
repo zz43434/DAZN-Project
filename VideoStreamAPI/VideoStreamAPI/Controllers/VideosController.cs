@@ -28,7 +28,6 @@ namespace VideoStreamAPI.Controllers
         [HttpGet("/all-videos")]
         public ActionResult<List<VideoModel>> Get()
         {
-            
             return _videoService.GetVideos();
         }
         

@@ -10,7 +10,15 @@ namespace VideoStreamAPI.Services
     {
         public List<VideoModel> GetVideos()
         {
-            return new List<VideoModel> {
+            return allVideos;
+        }
+
+        public VideoModel GetVideo(Guid videoId)
+        {
+            return null;
+        }
+
+        readonly List<VideoModel> allVideos = new List<VideoModel> {
                 new VideoModel
                 {
                     VideoId = Guid.NewGuid(),
@@ -36,6 +44,5 @@ namespace VideoStreamAPI.Services
                     VideoName = "Test4"
                 }
             };
-        }
     }
 }
