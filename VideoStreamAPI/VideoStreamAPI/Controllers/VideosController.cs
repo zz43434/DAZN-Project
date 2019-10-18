@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using VideoStreamAPI.Models;
+using VideoStreamAPI.Services;
 
 namespace VideoStreamAPI.Controllers
 {
@@ -10,11 +12,24 @@ namespace VideoStreamAPI.Controllers
     [ApiController]
     public class VideosController : ControllerBase
     {
+
+        private VideoService _videoService;
+        private AuthorizationService _authorizationService;
+        private StreamManagementService _streamManagementService;
+
+        public VideosController(VideoService videoService, AuthorizationService authorizationService, StreamManagementService streamManagementService)
+        {
+            _videoService = videoService;
+            _authorizationService = authorizationService;
+            _streamManagementService = streamManagementService;
+        }
+
         // GET api/values
         [HttpGet("/all-videos")]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<List<VideoModel>> Get()
         {
-            return new string[] { "value1", "value2" };
+            
+            return _videoService.GetVideos();
         }
         
         [HttpGet("/{videoId}/{clientId}")]
