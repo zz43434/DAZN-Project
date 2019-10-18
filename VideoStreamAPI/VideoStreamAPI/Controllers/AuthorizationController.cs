@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VideoStreamAPI.Services;
 
 namespace VideoStreamAPI.Controllers
 {
@@ -11,16 +12,23 @@ namespace VideoStreamAPI.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<string> IsUserAuthorized()
+
+        private AuthorizationService _authorizationService;
+
+        public AuthorizationController(AuthorizationService authorizationService)
         {
-            return new string[] { "value1", "value2" };
+            _authorizationService = authorizationService;
+        }
+        [HttpGet]
+        public ActionResult<bool> IsUserAuthorized(Guid clientId)
+        {
+            return _authorizationService.IsUserAuthorized(clientId);
         }
 
         [HttpGet("/authorize-user/{clientId}")]
-        public IEnumerable<string> AuthorizeUser(Guid clientId)
+        public string AuthorizeUser(Guid clientId)
         {
-            return null;
+            return "User Authorized";
         }
     }
 }

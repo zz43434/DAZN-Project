@@ -7,5 +7,9 @@ namespace VideoStreamAPI.Services
 {
     public class AuthorizationService
     {
+        public bool IsUserAuthorized(Guid clientId)
+        {
+            return true;
+        }
     }
 }

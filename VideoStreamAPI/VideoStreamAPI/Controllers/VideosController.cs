@@ -30,7 +30,13 @@ namespace VideoStreamAPI.Controllers
         {
             return _videoService.GetVideos();
         }
-        
+
+        [HttpGet("/{videoId}")]
+        public ActionResult<VideoModel> Get(Guid videoId)
+        {
+            return _videoService.GetVideo(videoId);
+        }
+
         [HttpGet("/{videoId}/{clientId}")]
         public ActionResult<IEnumerable<string>> Get(Guid videoId, Guid clientId)
         {
