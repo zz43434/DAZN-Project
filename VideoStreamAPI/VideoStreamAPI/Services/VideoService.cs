@@ -13,25 +13,25 @@ namespace VideoStreamAPI.Services
             return new List<VideoModel> {
                 new VideoModel
                 {
-                    VideoId = new Guid(),
+                    VideoId = Guid.NewGuid(),
                     VideoLength = 7,
                     VideoName = "Test1"
                 },
                 new VideoModel
                 {
-                    VideoId = new Guid(),
+                    VideoId = Guid.NewGuid(),
                     VideoLength = 6,
                     VideoName = "Test2"
                 },
                 new VideoModel
                 {
-                    VideoId = new Guid(),
+                    VideoId = Guid.NewGuid(),
                     VideoLength = 4,
                     VideoName = "Test3"
                 },
                 new VideoModel
                 {
-                    VideoId = new Guid(),
+                    VideoId = Guid.NewGuid(),
                     VideoLength = 1,
                     VideoName = "Test4"
                 }
