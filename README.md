@@ -1,1 +1,5 @@
-# DAZN-Project
+# VideoStreamAPI
+
+## Sections 
+
+1. Task / Assumptions
