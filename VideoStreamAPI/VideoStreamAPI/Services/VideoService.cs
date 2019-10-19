@@ -8,6 +8,8 @@ namespace VideoStreamAPI.Services
 {
     public class VideoService
     {
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         public List<VideoModel> GetVideos()
         {
             return allVideos;

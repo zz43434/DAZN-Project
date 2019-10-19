@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VideoStreamAPI.Models;
 using VideoStreamAPI.Services;
@@ -16,6 +14,7 @@ namespace VideoStreamAPI.Controllers
         private VideoService _videoService;
         private AuthorizationService _authorizationService;
         private StreamManagementService _streamManagementService;
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public VideosController(VideoService videoService, AuthorizationService authorizationService, StreamManagementService streamManagementService)
         {
@@ -27,19 +26,38 @@ namespace VideoStreamAPI.Controllers
         // GET api/values
         [HttpGet("/all-videos")]
         public ActionResult<List<VideoModel>> Get()
-        {            
-            return _videoService.GetVideos();
+        {
+            try
+            {
+                return Ok(_videoService.GetVideos()); 
+            }
+            catch(Exception ex)
+            {
+                _logger.Error(ex.Message);
+                throw;
+            }
         }
 
         [HttpGet("/{videoId}")]
         public ActionResult<VideoModel> Get(Guid videoId)
         {
-            return _videoService.GetVideo(videoId);
+            try
+            {
+                return _videoService.GetVideo(videoId);
+            }
+            catch(Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         [HttpGet("/{videoId}/{clientId}")]
-        public ActionResult<IEnumerable<string>> Get(Guid videoId, Guid clientId)
+        public ActionResult<string> Get(Guid videoId, Guid clientId)
         {
+            if (_authorizationService.IsUserAuthorized(clientId))
+            {
+                return "User Exists";
+            }
             return null;
         }
     }

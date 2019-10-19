@@ -14,11 +14,13 @@ namespace VideoStreamAPI.Controllers
     {
 
         private AuthorizationService _authorizationService;
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public AuthorizationController(AuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
         }
+
         [HttpGet]
         public ActionResult<bool> IsUserAuthorized(Guid clientId)
         {
@@ -28,6 +30,7 @@ namespace VideoStreamAPI.Controllers
         [HttpGet("/authorize-user/{clientId}")]
         public string AuthorizeUser(Guid clientId)
         {
+            
             return "User Authorized";
         }
     }
