@@ -10,23 +10,39 @@ namespace VideoStreamAPI.Services
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public bool IsClientExceedingStreamLimit(Guid clientId)
+        public bool IsClientExceedingStreamLimit(RequestModel request)
         {
             return true;
         }
 
-        public void UserWatchCount(Guid clientId)
+        public void UserWatchCount(RequestModel request)
         {
-            var clientStreams = streams.FindAll(a => a.ClientId == clientId && a.EndedWatching == null);
+            var clientStreams = streams.FindAll(a => a.ClientId == request.ClientId && a.EndedWatching == null);
 
             if (clientStreams.Count > 3)
             {
+                streams.Add(new StreamingDetailsModel
+                {
+                    ClientId = request.ClientId,
+                    VideoId = request.VideoId,
+                    StartedWatching = DateTime.Now,
+                    EndedWatching = null
+                });
+
                 _logger.Debug(@"User is currently watching {clientStreams} videos");
             }
             else
             {
                 _logger.Debug("User is exceeding stream limit");
             }
+        }
+
+        public void UserStoppedWatching(RequestModel request)
+        {
+            var stream = streams.Find(a => a.ClientId == request.ClientId && a.VideoId == request.VideoId && a.EndedWatching == null);
+
+            stream.EndedWatching = DateTime.Now;
+            
         }
 
         readonly List<StreamingDetailsModel> streams = new List<StreamingDetailsModel>()

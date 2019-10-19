@@ -38,36 +38,37 @@ namespace VideoStreamAPI.Controllers
             }
         }
 
-        [HttpGet("/{videoId}")]
-        public ActionResult<VideoModel> Get(Guid videoId)
-        {
-            try
-            {
-                return _videoService.GetVideo(videoId);
-            }
-            catch(Exception ex)
-            {
-                _logger.Error(ex);
-                throw;
-            }
-        }
-
         [HttpGet("/video")]
         public ActionResult<string> Get([FromBody]RequestModel request)
         {
-            if (_authorizationService.IsUserAuthorized(request.ClientId))
+            if (IsUserAuthenticated(request.ClientId))
             {
-                try
+                if (IsUserExceedingStreamLimit(request.ClientId))
                 {
-                    _videoService.GetVideo(request.VideoId);
+                    try
+                    {
+                        _videoService.GetVideo(request.VideoId);
+                        return Ok();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex.Message);
+                        throw;
+                    }
                 }
-                catch(Exception ex)
-                {
-                    _logger.Error(ex.Message);
-                    throw;
-                }
+                return "Stream limit reached";
             }
             return "User not authorised";
+        }
+
+        private bool IsUserAuthenticated(Guid clientId)
+        {
+            return _authorizationService.IsUserAuthorized(clientId);
+        }
+
+        private bool IsUserExceedingStreamLimit(RequestModel request)
+        {
+            return _streamManagementService.IsClientExceedingStreamLimit(request);
         }
     }
 }

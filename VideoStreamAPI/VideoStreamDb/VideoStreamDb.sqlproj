@@ -57,13 +57,16 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="client_details.sql" />
-    <Build Include="video_details.sql" />
-    <Build Include="streaming_details.sql" />
+    <Build Include="Tables\video_details.sql" />
+    <Build Include="Tables\client_details.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="VideoStreamDb.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\streaming_details.sql" />
   </ItemGroup>
 </Project>
