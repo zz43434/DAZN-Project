@@ -48,17 +48,26 @@ namespace VideoStreamAPI.Controllers
             catch(Exception ex)
             {
                 _logger.Error(ex);
+                throw;
             }
         }
 
-        [HttpGet("/{videoId}/{clientId}")]
-        public ActionResult<string> Get(Guid videoId, Guid clientId)
+        [HttpGet("/video")]
+        public ActionResult<string> Get([FromBody]RequestModel request)
         {
-            if (_authorizationService.IsUserAuthorized(clientId))
+            if (_authorizationService.IsUserAuthorized(request.ClientId))
             {
-                return "User Exists";
+                try
+                {
+                    _videoService.GetVideo(request.VideoId);
+                }
+                catch(Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    throw;
+                }
             }
-            return null;
+            return "User not authorised";
         }
     }
 }

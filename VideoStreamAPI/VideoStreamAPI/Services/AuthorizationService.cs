@@ -24,8 +24,6 @@ namespace VideoStreamAPI.Services
 
         public List<Guid> Clients = new List<Guid>();
 
-        public List<Tuple<Guid, bool>> Tokens = new List<Tuple<Guid, bool>>();
-
         public void SetClients()
         {
             Clients.Add(Guid.Parse("54d6e703-23e4-453b-9ede-0dc4cdfa7174"));
