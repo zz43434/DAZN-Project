@@ -29,10 +29,10 @@ namespace VideoStreamAPI.Controllers
         }
 
         [HttpGet("/authorize-user/{clientId}")]
-        public string AuthorizeUser(Guid clientId)
+        public async Task<ActionResult> AuthorizeUser(Guid clientId)
         {
-            
-            return "User Authorized";
+            var result = await _authorizationService.AuthorizeUser(clientId);
+            return Ok(result);
         }
     }
 }

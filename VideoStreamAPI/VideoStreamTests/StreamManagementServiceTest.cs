@@ -11,6 +11,15 @@ namespace VideoStreamTests
         public void DoesStreamExist_Pass() { }
 
         [Fact]
-        public void 
+        public void DoesStreamExist_Fail() { }
+
+        [Fact]
+        public void CreateStream_Pass() { }
+
+        [Fact]
+        public void DeleteStream_Pass() { }
+
+        [Fact]
+        public void StreamCount_Pass() { }
     }
 }

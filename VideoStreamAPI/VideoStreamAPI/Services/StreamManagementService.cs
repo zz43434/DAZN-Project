@@ -39,6 +39,13 @@ namespace VideoStreamAPI.Services
             _logger.Debug($"New stream added for client: {clientId}");
         }
 
+        public void StopStream(Guid streamId)
+        {
+            var stream = streams.Find(a => a.StreamId == streamId);
+
+            streams.Remove(stream);
+        }
+
         public List<StreamModel> CurrentStreams(Guid clientId)
         {
             var clientStreams = streams.FindAll(a => a.ClientId == clientId);
@@ -46,11 +53,5 @@ namespace VideoStreamAPI.Services
             return clientStreams;
         }
 
-        public void StopStream(Guid streamId)
-        {
-            var stream = streams.Find(a => a.StreamId == streamId);
-
-            streams.Remove(stream);            
-        }
     }
 }
