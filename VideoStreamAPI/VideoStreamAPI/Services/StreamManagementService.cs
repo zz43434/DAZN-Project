@@ -10,71 +10,47 @@ namespace VideoStreamAPI.Services
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public bool IsClientExceedingStreamLimit(RequestModel request)
+        private int maxStreams = 3;
+
+        private List<StreamModel> streams = new List<StreamModel>();
+
+        public bool IsClientExceedingStreamLimit(Guid clientId)
         {
+            var streamCount = streams.Count(a => a.ClientId == clientId);
+
+            if (streamCount > maxStreams)
+            {
+                return false;
+            }
+
             return true;
         }
 
-        public void UserWatchCount(RequestModel request)
+        public void StartStream(Guid clientId)
         {
-            var clientStreams = streams.FindAll(a => a.ClientId == request.ClientId && a.EndedWatching == null);
-
-            if (clientStreams.Count > 3)
+            var newStream = new StreamModel
             {
-                streams.Add(new StreamingDetailsModel
-                {
-                    ClientId = request.ClientId,
-                    VideoId = request.VideoId,
-                    StartedWatching = DateTime.Now,
-                    EndedWatching = null
-                });
+                ClientId = clientId,
+                StreamId = Guid.NewGuid()
+            };
 
-                _logger.Debug(@"User is currently watching {clientStreams} videos");
-            }
-            else
-            {
-                _logger.Debug("User is exceeding stream limit");
-            }
+            streams.Add(newStream);
+
+            _logger.Debug($"New stream added for client: {clientId}");
         }
 
-        public void UserStoppedWatching(RequestModel request)
+        public List<StreamModel> CurrentStreams(Guid clientId)
         {
-            var stream = streams.Find(a => a.ClientId == request.ClientId && a.VideoId == request.VideoId && a.EndedWatching == null);
+            var clientStreams = streams.FindAll(a => a.ClientId == clientId);
 
-            stream.EndedWatching = DateTime.Now;
-            
+            return clientStreams;
         }
 
-        readonly List<StreamingDetailsModel> streams = new List<StreamingDetailsModel>()
+        public void StopStream(Guid streamId)
         {
-            new StreamingDetailsModel
-            {
-                ClientId = Guid.Parse("54d6e703-23e4-453b-9ede-0dc4cdfa7174"),
-                VideoId = Guid.Parse("b1ce21b0-d542-4631-a662-cde3db788f73"),
-                StartedWatching = DateTime.Now,
-                EndedWatching = null
-            },
-            new StreamingDetailsModel
-            {
-                ClientId = Guid.Parse("b5b4f338-3703-4323-a379-bb067afcb4fd"),
-                VideoId = Guid.Parse("b1ce21b0-d542-4631-a662-cde3db788f73"),
-                StartedWatching = DateTime.Now,
-                EndedWatching = null
-            },
-            new StreamingDetailsModel
-            {
-                ClientId = Guid.Parse("852c619e-ff88-4597-8966-be180fa345d9"),
-                VideoId = Guid.Parse("b1ce21b0-d542-4631-a662-cde3db788f73"),
-                StartedWatching = DateTime.Now,
-                EndedWatching = null
-            },
-            new StreamingDetailsModel
-            {
-                ClientId = Guid.Parse("852c619e-ff88-4597-8966-be180fa345d9"),
-                VideoId = Guid.Parse("b1ce21b0-d542-4631-a662-cde3db788f73"),
-                StartedWatching = DateTime.Now,
-                EndedWatching = null
-            },
-        };
+            var stream = streams.Find(a => a.StreamId == streamId);
+
+            streams.Remove(stream);            
+        }
     }
 }

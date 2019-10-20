@@ -9,6 +9,6 @@ namespace VideoStreamAPI.Models
     {
         public Guid ClientId { get; set; }
         public string ClientName { get; set; }
-        public string ClientDevice { get; set; }
+        public int CurrentStreams { get; set; }
     }
 }

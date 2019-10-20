@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VideoStreamAPI.Models;
 using VideoStreamAPI.Services;
@@ -21,54 +22,56 @@ namespace VideoStreamAPI.Controllers
             _videoService = videoService;
             _authorizationService = authorizationService;
             _streamManagementService = streamManagementService;
-        }
+        } 
 
         // GET api/values
         [HttpGet("/all-videos")]
-        public ActionResult<List<VideoModel>> Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                return Ok(_videoService.GetVideos()); 
+                var result = await _videoService.GetVideos();
+                return Ok(result); 
             }
             catch(Exception ex)
             {
                 _logger.Error(ex.Message);
-                throw;
+                return NotFound();
             }
         }
 
         [HttpGet("/video")]
-        public ActionResult<string> Get([FromBody]RequestModel request)
+        public async Task<IActionResult> Get([FromBody]RequestModel request)
         {
-            if (IsUserAuthenticated(request.ClientId))
-            {
-                if (IsUserExceedingStreamLimit(request.ClientId))
-                {
-                    try
-                    {
-                        _videoService.GetVideo(request.VideoId);
-                        return Ok();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex.Message);
-                        throw;
-                    }
-                }
-                return "Stream limit reached";
-            }
-            return "User not authorised";
+            //if (IsUserAuthenticated(request.ClientId))
+            //{
+            //    if (IsUserExceedingStreamLimit(request))
+            //    {
+            //        try
+            //        {
+            //            var result = await _videoService.GetVideo(request.VideoId);
+            //            return Ok(result);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            _logger.Error(ex.Message);
+            //            throw;
+            //        }
+            //    }
+            //    throw new Exception("Stream limit reached");
+            //}
+            throw new Exception("User not authorised");
         }
 
-        private bool IsUserAuthenticated(Guid clientId)
+        private Task<string> IsUserAuthenticated(Guid clientId)
         {
-            return _authorizationService.IsUserAuthorized(clientId);
+            var authorized = await _authorizationService.IsUserAuthorized(clientId);
+            return authorized;
         }
 
         private bool IsUserExceedingStreamLimit(RequestModel request)
         {
-            return _streamManagementService.IsClientExceedingStreamLimit(request);
+            return _streamManagementService.IsClientExceedingStreamLimit(request.ClientId);
         }
     }
 }

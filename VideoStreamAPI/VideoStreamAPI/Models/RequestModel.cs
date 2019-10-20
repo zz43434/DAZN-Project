@@ -9,7 +9,5 @@ namespace VideoStreamAPI.Models
     {
         public Guid ClientId { get; set; }
         public Guid VideoId { get; set; }
-        public string UserName { get; set; }
-        public string Token { get; set; }
     }
 }
