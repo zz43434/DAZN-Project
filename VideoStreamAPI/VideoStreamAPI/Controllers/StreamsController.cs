@@ -54,5 +54,18 @@ namespace VideoStreamAPI.Controllers
 
             return Ok();
         }
+
+        [HttpGet("/all-streams")]
+        public async Task<List<StreamModel>> GetStreamsForUserById(Guid userId)
+        {
+            var streams = await _streamManagementService.CurrentStreams(userId);
+
+            if(streams.Count > 0)
+            {
+                return Ok(streams);
+            }
+
+            return NoContent();
+        }
     }
 }

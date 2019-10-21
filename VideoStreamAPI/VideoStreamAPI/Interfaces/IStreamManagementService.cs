@@ -14,9 +14,9 @@ namespace VideoStreamAPI.Interfaces
         Task CloseStream(Guid streamId);
         
         bool ClientStreamLimit(Guid clientId);
-        
-        List<StreamModel> CurrentStreams(Guid clientId);
-        
+
+        Task<List<StreamModel>> CurrentStreams(Guid clientId);
+            
         bool DoesStreamExist(Guid clientId);
     }
 }

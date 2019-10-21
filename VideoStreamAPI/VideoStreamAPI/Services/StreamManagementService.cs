@@ -72,7 +72,7 @@ namespace VideoStreamAPI.Services
             return true;
         }
 
-        public List<StreamModel> CurrentStreams(Guid clientId)
+        public async Task<List<StreamModel>> CurrentStreams(Guid clientId)
         {
             var clientStreams = currentStreams.FindAll(a => a.UserId == clientId);
 
