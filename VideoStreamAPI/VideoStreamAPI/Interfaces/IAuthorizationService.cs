@@ -8,11 +8,11 @@ namespace VideoStreamAPI.Interfaces
     public interface IAuthorizationService
     {
         Task<bool> IsUserAuthorized(Guid clientId);
-        
+
         Task<string> AuthorizeUser(Guid clientId);
         
-        bool DoesUserExist(Guid clientId);
-        
         void SetClients();
+
+        bool DoesUserExist(Guid clientId);
     }
 }

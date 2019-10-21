@@ -39,7 +39,7 @@ namespace VideoStreamAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("/open-stream")]
+        [HttpPost("/open-stream")]
         public async Task<IActionResult> StartStream([FromBody]RequestModel request)
         {
             var stream = await _streamManagementService.RequestStream(request);
