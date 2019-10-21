@@ -23,7 +23,6 @@ namespace VideoStreamAPI.Services
             {
                 return false;
             }
-
             return true;
         }
 
@@ -66,6 +65,5 @@ namespace VideoStreamAPI.Services
             }
             return false;
         }
-
     }
 }
