@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using VideoStreamAPI.Interfaces;
 using VideoStreamAPI.Models;
 using VideoStreamAPI.Services;
 
@@ -12,12 +13,12 @@ namespace VideoStreamAPI.Controllers
     public class VideosController : ControllerBase
     {
 
-        private VideoService _videoService;
-        private AuthorizationService _authorizationService;
-        private StreamManagementService _streamManagementService;
+        private IVideoService _videoService;
+        private IAuthorizationService _authorizationService;
+        private IStreamManagementService _streamManagementService;
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public VideosController(VideoService videoService, AuthorizationService authorizationService, StreamManagementService streamManagementService)
+        public VideosController(IVideoService videoService, IAuthorizationService authorizationService, IStreamManagementService streamManagementService)
         {
             _videoService = videoService;
             _authorizationService = authorizationService;
@@ -43,27 +44,27 @@ namespace VideoStreamAPI.Controllers
         [HttpGet("/video")]
         public async Task<IActionResult> Get([FromBody]RequestModel request)
         {
-            //if (IsUserAuthenticated(request.ClientId))
-            //{
-            //    if (IsUserExceedingStreamLimit(request))
-            //    {
-            //        try
-            //        {
-            //            var result = await _videoService.GetVideo(request.VideoId);
-            //            return Ok(result);
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            _logger.Error(ex.Message);
-            //            throw;
-            //        }
-            //    }
-            //    throw new Exception("Stream limit reached");
-            //}
+            if (await IsUserAuthenticatedAsync(request.ClientId))
+            {
+                if (IsUserExceedingStreamLimit(request))
+                {
+                    try
+                    {
+                        var result = await _videoService.GetVideo(request.VideoId);
+                        return Ok(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex.Message);
+                        throw;
+                    }
+                }
+                throw new Exception("Stream limit reached");
+            }
             throw new Exception("User not authorised");
         }
 
-        private Task<string> IsUserAuthenticated(Guid clientId)
+        private async Task<bool> IsUserAuthenticatedAsync(Guid clientId)
         {
             var authorized = await _authorizationService.IsUserAuthorized(clientId);
             return authorized;

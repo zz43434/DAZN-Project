@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoStreamAPI.Services;
 using NLog.Extensions.Logging;
+using VideoStreamAPI.Interfaces;
 
 namespace VideoStreamAPI
 {
@@ -22,9 +23,9 @@ namespace VideoStreamAPI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<VideoService>();
-            services.AddSingleton<AuthorizationService>();
-            services.AddSingleton<StreamManagementService>();
+            services.AddSingleton<IVideoService, VideoService>();
+            services.AddSingleton<IAuthorizationService, AuthorizationService>();
+            services.AddSingleton<IStreamManagementService, StreamManagementService>();
             services.AddLogging(logger => logger.AddNLog("NLog.config"));
         }
 

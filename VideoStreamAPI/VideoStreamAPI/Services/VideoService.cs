@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VideoStreamAPI.Interfaces;
 using VideoStreamAPI.Models;
 
 namespace VideoStreamAPI.Services
 {
-    public class VideoService
+    public class VideoService : IVideoService
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 

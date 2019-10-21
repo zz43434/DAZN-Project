@@ -2,16 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VideoStreamAPI.Models;
+using VideoStreamAPI.Interfaces;
 using Xunit;
 
 namespace VideoStreamTests
 {
     public class VideoServiceTest
     {
+        private IVideoService _videoService;
+
+        public VideoServiceTest(IVideoService videoService)
+        {
+            _videoService = videoService;
+        }
+
         [Fact]
         public void ReturnAllVideos_Pass()
         {
-            var result = allVideos;
+            var result = _videoService.GetVideos();
 
             Assert.Equal(result, allVideos);
         }
