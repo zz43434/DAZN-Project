@@ -27,7 +27,7 @@ namespace VideoStreamAPI.Services
             return true;
         }
 
-        public void StartStream(Guid clientId)
+        public Guid StartStream(Guid clientId)
         {
             var newStream = new StreamModel
             {
@@ -38,6 +38,8 @@ namespace VideoStreamAPI.Services
             streams.Add(newStream);
 
             _logger.Debug($"New stream added for client: {clientId}");
+
+            return newStream.StreamId;
         }
 
         public void StopStream(Guid streamId)
@@ -52,6 +54,17 @@ namespace VideoStreamAPI.Services
             var clientStreams = streams.FindAll(a => a.ClientId == clientId);
 
             return clientStreams;
+        }
+
+        public bool DoesStreamExist(Guid clientId)
+        {
+            var stream = streams.Any(a => a.ClientId == clientId);
+
+            if (stream)
+            {
+                return true;
+            }
+            return false;
         }
 
     }

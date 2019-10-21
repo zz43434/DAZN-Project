@@ -9,11 +9,13 @@ namespace VideoStreamAPI.Interfaces
     public interface IStreamManagementService
     {
         bool IsClientExceedingStreamLimit(Guid clientId);
-        
-        void StartStream(Guid clientId);
+
+        Guid StartStream(Guid clientId);
         
         void StopStream(Guid streamId);
         
         List<StreamModel> CurrentStreams(Guid clientId);
+
+        bool DoesStreamExist(Guid clientId);
     }
 }
