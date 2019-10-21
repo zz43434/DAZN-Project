@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace VideoStreamAPI.Models
 {
-    public class ClientModel
+    public class UserModel
     {
-        public Guid ClientId { get; set; }
+        public Guid UserId { get; set; }
         public string ClientName { get; set; }
-        public int CurrentStreams { get; set; }
     }
 }

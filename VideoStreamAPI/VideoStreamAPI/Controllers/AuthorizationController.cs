@@ -14,10 +14,10 @@ namespace VideoStreamAPI.Controllers
     public class AuthorizationController : ControllerBase
     {
 
-        private AuthorizationService _authorizationService;
+        private IAuthorizationService _authorizationService;
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public AuthorizationController(AuthorizationService authorizationService)
+        public AuthorizationController(IAuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
         }
@@ -26,7 +26,13 @@ namespace VideoStreamAPI.Controllers
         public async Task<IActionResult> IsUserAuthorized(Guid clientId)
         {
             var authorized = await _authorizationService.IsUserAuthorized(clientId);
-            return Ok(authorized);
+
+            if (authorized)
+            {
+                return Ok(authorized);
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet("/authorize-user/{clientId}")]

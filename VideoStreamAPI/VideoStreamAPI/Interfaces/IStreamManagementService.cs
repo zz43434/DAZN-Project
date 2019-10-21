@@ -8,14 +8,15 @@ namespace VideoStreamAPI.Interfaces
 {
     public interface IStreamManagementService
     {
-        bool IsClientExceedingStreamLimit(Guid clientId);
 
-        Guid StartStream(Guid clientId);
+        Task<StreamModel> RequestStream(RequestModel request);
         
-        void StopStream(Guid streamId);
+        Task CloseStream(Guid streamId);
+        
+        bool IsClientExceedingStreamLimit(Guid clientId);
         
         List<StreamModel> CurrentStreams(Guid clientId);
-
+        
         bool DoesStreamExist(Guid clientId);
     }
 }

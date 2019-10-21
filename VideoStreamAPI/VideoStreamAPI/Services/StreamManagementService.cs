@@ -10,14 +10,59 @@ namespace VideoStreamAPI.Services
     public class StreamManagementService : IStreamManagementService
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-
         private int maxStreams = 3;
+        private List<StreamModel> currentStreams = new List<StreamModel>();
 
-        private List<StreamModel> streams = new List<StreamModel>();
+        private IVideoService _videoService;
+        private IAuthorizationService _authorizationService;
+
+        public StreamManagementService(IVideoService videoService, IAuthorizationService authorizationService)
+        {
+            _videoService = videoService;
+            _authorizationService = authorizationService;
+        }
+
+        public async Task<List<VideoModel>> GetStreamContent()
+        {
+            return await _videoService.GetVideos();
+        }
+
+        public async Task<StreamModel> RequestStream(RequestModel request)
+        {
+            var authCheck = await _authorizationService.IsUserAuthorized(request.UserId);
+            var streamLimitCheck = IsClientExceedingStreamLimit(request.UserId);
+
+            if (authCheck)
+            {
+                if (streamLimitCheck)
+                {
+                    var stream = new StreamModel
+                    {
+                        UserId = request.UserId,
+                        VideoId = request.VideoId,
+                        StreamId = Guid.NewGuid()
+                    };
+
+                    currentStreams.Add(stream);
+
+                    return stream;
+                }
+
+            }
+            throw new UnauthorizedAccessException();
+        }
+
+        public async Task CloseStream(Guid streamId)
+        {
+            var stream = currentStreams.Find(a => a.StreamId == streamId);
+
+            currentStreams.Remove(stream);
+        }
+
 
         public bool IsClientExceedingStreamLimit(Guid clientId)
         {
-            var streamCount = streams.Count(a => a.ClientId == clientId);
+            var streamCount = currentStreams.Count(a => a.UserId == clientId);
 
             if (streamCount > maxStreams)
             {
@@ -26,38 +71,16 @@ namespace VideoStreamAPI.Services
             return true;
         }
 
-        public Guid StartStream(Guid clientId)
-        {
-            var newStream = new StreamModel
-            {
-                ClientId = clientId,
-                StreamId = Guid.NewGuid()
-            };
-
-            streams.Add(newStream);
-
-            _logger.Debug($"New stream added for client: {clientId}");
-
-            return newStream.StreamId;
-        }
-
-        public void StopStream(Guid streamId)
-        {
-            var stream = streams.Find(a => a.StreamId == streamId);
-
-            streams.Remove(stream);
-        }
-
         public List<StreamModel> CurrentStreams(Guid clientId)
         {
-            var clientStreams = streams.FindAll(a => a.ClientId == clientId);
+            var clientStreams = currentStreams.FindAll(a => a.UserId == clientId);
 
             return clientStreams;
         }
 
         public bool DoesStreamExist(Guid clientId)
         {
-            var stream = streams.Any(a => a.ClientId == clientId);
+            var stream = currentStreams.Any(a => a.UserId == clientId);
 
             if (stream)
             {
