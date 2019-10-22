@@ -11,7 +11,7 @@ namespace VideoStreamAPI.Services
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private int maxStreams = 3;
-        private List<StreamModel> currentStreams = new List<StreamModel>();
+        public List<StreamModel> currentStreams = new List<StreamModel>();
 
         private IVideoService _videoService;
         private IAuthorizationService _authorizationService;
@@ -30,7 +30,7 @@ namespace VideoStreamAPI.Services
         public async Task<StreamModel> RequestStream(RequestModel request)
         {
             var authCheck = await _authorizationService.IsUserAuthorized(request.UserId);
-            var streamLimitCheck = ClientStreamLimit(request.UserId);
+            var streamLimitCheck = IsUserOverStreamLimit(request.UserId);
             var video = await _videoService.GetVideo(request.VideoId);
 
             if (authCheck)
@@ -63,15 +63,15 @@ namespace VideoStreamAPI.Services
         }
 
 
-        public bool ClientStreamLimit(Guid clientId)
+        public bool IsUserOverStreamLimit(Guid clientId)
         {
             var streamCount = currentStreams.Count(a => a.UserId == clientId);
 
             if (streamCount > maxStreams)
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
         public async Task<List<StreamModel>> CurrentStreams(Guid clientId)
@@ -81,9 +81,9 @@ namespace VideoStreamAPI.Services
             return clientStreams;
         }
 
-        public bool DoesStreamExist(Guid clientId)
+        public bool DoesStreamExist(Guid streamId)
         {
-            var stream = currentStreams.Any(a => a.UserId == clientId);
+            var stream = currentStreams.Any(a => a.StreamId == streamId);
 
             if (stream)
             {

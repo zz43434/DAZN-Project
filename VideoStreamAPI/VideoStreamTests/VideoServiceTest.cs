@@ -4,25 +4,22 @@ using System.Linq;
 using VideoStreamAPI.Models;
 using VideoStreamAPI.Interfaces;
 using Xunit;
+using Moq;
+using VideoStreamAPI.Services;
 
 namespace VideoStreamTests
 {
     public class VideoServiceTest
     {
-        private IVideoService _videoService;
+        //[Fact]
+        //public void ReturnAllVideos_Pass()
+        //{
+        //    var videoService = new Mock<VideoService>();
 
-        public VideoServiceTest(IVideoService videoService)
-        {
-            _videoService = videoService;
-        }
+        //    videoService.Setup(a => a.GetVideos()).Returns(allVideos.ToList());
 
-        [Fact]
-        public void ReturnAllVideos_Pass()
-        {
-            var result = _videoService.GetVideos();
-
-            //Assert.Equal(result, allVideos);
-        }
+        //    //Assert.Equal(result, allVideos);
+        //}
 
         [Fact]
         public void ReturnSingleVideo_Pass()

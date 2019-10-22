@@ -13,7 +13,7 @@ namespace VideoStreamAPI.Interfaces
         
         Task CloseStream(Guid streamId);
         
-        bool ClientStreamLimit(Guid clientId);
+        bool IsUserOverStreamLimit(Guid clientId);
 
         Task<List<StreamModel>> CurrentStreams(Guid clientId);
             

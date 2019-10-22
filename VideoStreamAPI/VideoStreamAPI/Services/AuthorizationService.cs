@@ -18,9 +18,9 @@ namespace VideoStreamAPI.Services
             SetClients();
         }
 
-        public async Task<bool> IsUserAuthorized(Guid clientId)
+        public async Task<bool> IsUserAuthorized(Guid userId)
         {
-            if (DoesUserExist(clientId))
+            if (DoesUserExist(userId))
             {
                 return true;
             }
@@ -32,9 +32,9 @@ namespace VideoStreamAPI.Services
             if (!DoesUserExist(clientId))
             {
                 Clients.Add(clientId);
-                return "Client has been authorized";
+                return "User has been authorized";
             }
-            return "Client already exists";
+            return "User already authorized";
         }
         
         public bool DoesUserExist(Guid clientId)
