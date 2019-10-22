@@ -35,10 +35,10 @@ namespace VideoStreamAPI.Controllers
             return Unauthorized();
         }
 
-        [HttpPost("/{userId/authorize")]
-        public async Task<ActionResult> AuthorizeUser(Guid clientId)
+        [HttpPost("/{userId}/authorize")]
+        public async Task<IActionResult> AuthorizeUser(Guid userId)
         {
-            var result = await _authorizationService.AuthorizeUser(clientId);
+            var result = await _authorizationService.AuthorizeUser(userId);
             return Ok(result);
         }
     }
