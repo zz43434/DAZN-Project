@@ -11,59 +11,38 @@ namespace VideoStreamTests
 {
     public class VideoServiceTest
     {
-        //[Fact]
-        //public void ReturnAllVideos_Pass()
-        //{
-        //    var videoService = new Mock<VideoService>();
 
-        //    videoService.Setup(a => a.GetVideos()).Returns(allVideos.ToList());
-
-        //    //Assert.Equal(result, allVideos);
-        //}
+        private VideoService _videoService = new VideoService();
 
         [Fact]
-        public void ReturnSingleVideo_Pass()
+        public void ReturnAllVideos_Pass()
         {
-            var result = allVideos.SingleOrDefault();
+            var allVideos = _videoService.GetVideos();
 
-            Assert.IsType<VideoModel>(result);
-            //Assert.Single<VideoModel>(result);
+            Assert.IsType<List<VideoModel>>(allVideos.Result);
+            Assert.NotEmpty(allVideos.Result);
         }
 
         [Fact]
         public void ReturnVideoFromGUID_Pass()
         {
+            var allVideos = _videoService.GetVideos();
+            
+            var video = allVideos.Result[0];
 
+            var result = _videoService.GetVideo(video.VideoId);
+            
+            Assert.IsType<VideoModel>(result.Result);
         }
 
         [Fact]
-        public void ReturnVideoNotFoundError_Pass() { }
+        public void ReturnVideoFromGUID_Fail()
+        {
+            var video = Guid.NewGuid();
 
-        readonly List<VideoModel> allVideos = new List<VideoModel> {
-            new VideoModel
-            {
-                VideoId = Guid.NewGuid(),
-                VideoLength = 7,
-                VideoName = "Test1"
-            },
-            new VideoModel
-            {
-                VideoId = Guid.NewGuid(),
-                VideoLength = 6,
-                VideoName = "Test2"
-            },
-            new VideoModel
-            {
-                VideoId = Guid.NewGuid(),
-                VideoLength = 4,
-                VideoName = "Test3"
-            },
-            new VideoModel
-            {
-                VideoId = Guid.NewGuid(),
-                VideoLength = 1,
-                VideoName = "Test4"
-            }
-        };
+            var result = _videoService.GetVideo(video);
+
+            Assert.Null(result.Result);
+        }
     }
 }

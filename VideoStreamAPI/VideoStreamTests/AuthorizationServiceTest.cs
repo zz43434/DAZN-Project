@@ -10,23 +10,34 @@ namespace VideoStreamTests
 {
     public class AuthorizationServiceTest
     {
-        private IAuthorizationService _authorizationService;
-
-        public AuthorizationServiceTest(IAuthorizationService authorizationService)
-        {
-            _authorizationService = authorizationService;
-        }
+        private AuthorizationService _authorizationService = new AuthorizationService();
 
         [Fact]
-        public void ReturnUserIsAuthorized_Pass()
+        public void ReturnUserIsAuthorized_Fail()
         {
             var user = Guid.NewGuid();
 
-            var test = _authorizationService.IsUserAuthorized(user);
+            var auth = _authorizationService.IsUserAuthorized(user);
 
-            Assert.False(test.Result);
+            Assert.False(auth.Result);
         }
 
+        [Fact]
+        public async void ReturnUserIsAuthorized_Pass()
+        {
+            var user = Guid.NewGuid();
+
+            var auth = _authorizationService.IsUserAuthorized(user);
+
+            Assert.False(auth.Result);
+
+            await _authorizationService.AuthorizeUser(user);
+
+            auth = _authorizationService.IsUserAuthorized(user);
+
+            Assert.True(auth.Result);
+        }
+        
         [Fact]
         public async void AuthorizesUser_Pass()
         {
