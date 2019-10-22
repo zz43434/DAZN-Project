@@ -22,20 +22,20 @@ namespace VideoStreamAPI.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> IsUserAuthorized(Guid clientId)
+        [HttpGet("/{userId}")]
+        public async Task<IActionResult> IsUserAuthorized(Guid userId)
         {
-            var authorized = await _authorizationService.IsUserAuthorized(clientId);
+            var result = await _authorizationService.IsUserAuthorized(userId);
 
-            if (authorized)
+            if (result)
             {
-                return Ok(authorized);
+                return Ok(result);
             }
 
             return Unauthorized();
         }
 
-        [HttpGet("/authorize-user/{clientId}")]
+        [HttpPost("/{userId/authorize")]
         public async Task<ActionResult> AuthorizeUser(Guid clientId)
         {
             var result = await _authorizationService.AuthorizeUser(clientId);
