@@ -37,20 +37,22 @@ namespace VideoStreamAPI.Services
             {
                 if (streamLimitCheck)
                 {
-                    var stream = new StreamModel
+                    if (video != null)
                     {
-                        UserId = request.UserId,
-                        VideoId = video.VideoId,
-                        StreamId = Guid.NewGuid()
-                    };
+                        var stream = new StreamModel
+                        {
+                            UserId = request.UserId,
+                            VideoId = video.VideoId,
+                            StreamId = Guid.NewGuid()
+                        };
 
-                    currentStreams.Add(stream);
+                        currentStreams.Add(stream);
 
-                    return stream;
+                        return stream;
+                    }
                 }
-
             }
-            throw new UnauthorizedAccessException();
+            return null;
         }
 
         public async Task CloseStream(Guid streamId)

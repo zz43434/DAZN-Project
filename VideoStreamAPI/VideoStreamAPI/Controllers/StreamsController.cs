@@ -47,7 +47,7 @@ namespace VideoStreamAPI.Controllers
             return Ok(stream);
         }
 
-        [HttpGet("/close-stream")]
+        [HttpPost("/close-stream")]
         public async Task<IActionResult> StopStream(Guid streamId)
         {
             await _streamManagementService.CloseStream(streamId);

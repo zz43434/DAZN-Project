@@ -28,7 +28,13 @@ namespace VideoStreamAPI.Services
         {
             try
             {
-                return allVideos.Single(a => a.VideoId == videoId);
+                var video = allVideos.Any(a => a.VideoId == videoId);
+
+                if (video)
+                {
+                    return allVideos.Single(a => a.VideoId == videoId);
+                }
+                return null;
             }
             catch(Exception ex)
             {
