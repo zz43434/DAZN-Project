@@ -4,7 +4,6 @@ using System.Linq;
 using VideoStreamAPI.Models;
 using VideoStreamAPI.Interfaces;
 using Xunit;
-using Moq;
 using VideoStreamAPI.Services;
 
 namespace VideoStreamTests
