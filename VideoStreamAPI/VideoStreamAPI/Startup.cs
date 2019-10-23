@@ -54,8 +54,6 @@ namespace VideoStreamAPI
             {
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
