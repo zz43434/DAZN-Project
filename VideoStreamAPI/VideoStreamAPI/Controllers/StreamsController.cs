@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -59,7 +59,7 @@ namespace VideoStreamAPI.Controllers
                     return Ok(HttpStatusCode.TooManyRequests);
 
                 }
-                return NotFound();
+                return NoContent();
             }
             return Unauthorized();
         }
@@ -83,7 +83,7 @@ namespace VideoStreamAPI.Controllers
         {
             var streams = await _streamManagementService.CurrentStreams(userId);
 
-            if(streams.Count > 0)
+            if (streams.Count > 0)
             {
                 return Ok(streams);
             }
