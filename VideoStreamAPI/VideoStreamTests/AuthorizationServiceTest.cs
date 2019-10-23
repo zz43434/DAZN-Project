@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
-using Moq;
 using VideoStreamAPI.Services;
 using VideoStreamAPI.Interfaces;
 
