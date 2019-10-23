@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,36 +13,22 @@ namespace VideoStreamAPI.Services
         private int maxStreams = 3;
         public List<StreamModel> currentStreams = new List<StreamModel>();
 
-        private IVideoService _videoService;
-        private IAuthorizationService _authorizationService;
-
-        public StreamManagementService(IVideoService videoService, IAuthorizationService authorizationService)
-        {
-            _videoService = videoService;
-            _authorizationService = authorizationService;
-        }
-
-        public async Task<List<VideoModel>> GetStreamContent()
-        {
-            return await _videoService.GetVideos();
-        }
-
         public async Task<StreamModel> RequestStream(RequestModel request)
         {
             var overStreamLimitCheck = IsUserOverStreamLimit(request.UserId);
-            
+
             if (!overStreamLimitCheck)
             {
-                    var stream = new StreamModel
-                    {
-                        UserId = request.UserId,
-                        VideoId = request.VideoId,
-                        StreamId = Guid.NewGuid()
-                    };
+                var stream = new StreamModel
+                {
+                    UserId = request.UserId,
+                    VideoId = request.VideoId,
+                    StreamId = Guid.NewGuid()
+                };
 
-                    currentStreams.Add(stream);
+                currentStreams.Add(stream);
 
-                    return stream;
+                return stream;
             }
             return null;
         }
@@ -51,7 +37,7 @@ namespace VideoStreamAPI.Services
         {
             var stream = currentStreams.Find(a => a.StreamId == streamId);
 
-            currentStreams.Remove(stream);
+             currentStreams.Remove(stream);
         }
 
 
