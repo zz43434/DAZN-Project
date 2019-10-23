@@ -1,9 +1,4 @@
-﻿using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using VideoStreamAPI.Interfaces;
 using VideoStreamAPI.Models;
 using VideoStreamAPI.Services;
 using Xunit;
@@ -12,21 +7,13 @@ namespace VideoStreamTests
 {
     public class StreamManagementServiceTest
     {
-        private Mock<IAuthorizationService> _authServiceMock;
-        private Mock<IVideoService> _videoServiceMock;
-
-        public StreamManagementServiceTest()
-        {
-            _authServiceMock = new Mock<IAuthorizationService>();
-            _videoServiceMock = new Mock<IVideoService>();
-        }
 
         [Fact]
-        public async void DoesStreamExist_Pass()
+        public void DoesStreamExist_Pass()
         {
             var newStream = Guid.NewGuid();
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
 
             var results = new StreamModel
             {
@@ -36,7 +23,7 @@ namespace VideoStreamTests
             };
 
             streamService.currentStreams.Add(results);
-            
+
             var result = streamService.DoesStreamExist(newStream);
 
             Assert.True(result);
@@ -47,7 +34,7 @@ namespace VideoStreamTests
         {
             var newStream = Guid.NewGuid();
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
 
             var result = streamService.DoesStreamExist(newStream);
 
@@ -71,11 +58,8 @@ namespace VideoStreamTests
                 VideoId = video.VideoId,
                 UserId = user
             };
-            
-            _authServiceMock.Setup(a => a.IsUserAuthorized(user)).ReturnsAsync(true);
-            _videoServiceMock.Setup(a => a.GetVideo(video.VideoId)).ReturnsAsync(video);
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
 
             var result = await streamService.RequestStream(request);
 
@@ -101,13 +85,13 @@ namespace VideoStreamTests
                 UserId = Guid.NewGuid()
             };
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
 
             streamService.currentStreams.Add(stream);
 
             Assert.True(streamService.DoesStreamExist(stream.StreamId));
 
-            await streamService.CloseStream(stream.StreamId);
+            streamService.CloseStream(stream.StreamId);
 
             Assert.False(streamService.DoesStreamExist(stream.StreamId));
         }
@@ -122,14 +106,14 @@ namespace VideoStreamTests
                 UserId = Guid.NewGuid()
             };
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
 
             streamService.currentStreams.Add(stream);
             Assert.False(streamService.IsUserOverStreamLimit(stream.UserId));
             streamService.currentStreams.Add(stream);
             Assert.False(streamService.IsUserOverStreamLimit(stream.UserId));
             streamService.currentStreams.Add(stream);
-            Assert.False(streamService.IsUserOverStreamLimit(stream.UserId));
+            Assert.True(streamService.IsUserOverStreamLimit(stream.UserId));
 
         }
 
@@ -143,7 +127,7 @@ namespace VideoStreamTests
                 UserId = Guid.NewGuid()
             };
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
 
             streamService.currentStreams.Add(stream);
             streamService.currentStreams.Add(stream);
@@ -162,12 +146,12 @@ namespace VideoStreamTests
                 UserId = Guid.NewGuid()
             };
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
 
             streamService.currentStreams.Add(stream);
             Assert.True(streamService.DoesStreamExist(stream.StreamId));
 
-            await streamService.CloseStream(stream.StreamId);
+            streamService.CloseStream(stream.StreamId);
             Assert.False(streamService.DoesStreamExist(stream.StreamId));
         }
 
@@ -181,9 +165,9 @@ namespace VideoStreamTests
                 UserId = Guid.NewGuid()
             };
 
-            var streamService = new StreamManagementService(_videoServiceMock.Object, _authServiceMock.Object);
+            var streamService = new StreamManagementService();
             
-            await streamService.CloseStream(stream.StreamId);
+            streamService.CloseStream(stream.StreamId);
             Assert.False(streamService.DoesStreamExist(stream.StreamId));
         }
     }
