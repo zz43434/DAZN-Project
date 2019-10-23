@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VideoStreamAPI.Interfaces;
@@ -42,17 +43,39 @@ namespace VideoStreamAPI.Controllers
         [HttpPost("/open-stream")]
         public async Task<IActionResult> StartStream([FromBody]RequestModel request)
         {
-            var stream = await _streamManagementService.RequestStream(request);
+            var authorized = await _authorizationService.IsUserAuthorized(request.UserId);
+            var video = await _videoService.GetVideo(request.VideoId);
 
-            return Ok(stream);
+            if (authorized)
+            {
+                if (video != null)
+                {
+                    var stream = await _streamManagementService.RequestStream(request);
+
+                    if (stream != null)
+                    {
+                        return Ok(stream);
+                    }
+                    return Ok(HttpStatusCode.TooManyRequests);
+
+                }
+                return NotFound();
+            }
+            return Unauthorized();
         }
 
         [HttpPost("/close-stream")]
         public async Task<IActionResult> StopStream(Guid streamId)
         {
-            await _streamManagementService.CloseStream(streamId);
+            var stream = _streamManagementService.DoesStreamExist(streamId);
 
-            return Ok();
+            if (stream)
+            {
+                await _streamManagementService.CloseStream(streamId);
+
+                return Ok();
+            }
+            return NotFound();
         }
 
         [HttpGet("/all-streams")]

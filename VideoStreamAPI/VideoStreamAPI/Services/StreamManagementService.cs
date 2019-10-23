@@ -29,28 +29,20 @@ namespace VideoStreamAPI.Services
 
         public async Task<StreamModel> RequestStream(RequestModel request)
         {
-            var authCheck = await _authorizationService.IsUserAuthorized(request.UserId);
-            var streamLimitCheck = IsUserOverStreamLimit(request.UserId);
-            var video = await _videoService.GetVideo(request.VideoId);
-
-            if (authCheck)
+            var overStreamLimitCheck = IsUserOverStreamLimit(request.UserId);
+            
+            if (!overStreamLimitCheck)
             {
-                if (streamLimitCheck)
-                {
-                    if (video != null)
+                    var stream = new StreamModel
                     {
-                        var stream = new StreamModel
-                        {
-                            UserId = request.UserId,
-                            VideoId = video.VideoId,
-                            StreamId = Guid.NewGuid()
-                        };
+                        UserId = request.UserId,
+                        VideoId = request.VideoId,
+                        StreamId = Guid.NewGuid()
+                    };
 
-                        currentStreams.Add(stream);
+                    currentStreams.Add(stream);
 
-                        return stream;
-                    }
-                }
+                    return stream;
             }
             return null;
         }
@@ -67,7 +59,7 @@ namespace VideoStreamAPI.Services
         {
             var streamCount = currentStreams.Count(a => a.UserId == clientId);
 
-            if (streamCount > maxStreams)
+            if (streamCount >= maxStreams)
             {
                 return true;
             }
